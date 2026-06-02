@@ -7,6 +7,10 @@ import de.hitec.nhplus.datastorage.TreatmentDao;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
 
+import de.hitec.nhplus.datastorage.EmployeeDao;
+import de.hitec.nhplus.model.Employee;
+import de.hitec.nhplus.model.Role;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,6 +35,7 @@ public class SetUpDB {
         SetUpDB.wipeDb(connection);
         SetUpDB.setUpTablePatient(connection);
         SetUpDB.setUpTableTreatment(connection);
+        SetUpDB.setUpEmployees();
         SetUpDB.setUpPatients();
         SetUpDB.setUpTreatments();
     }
@@ -42,6 +47,7 @@ public class SetUpDB {
         try (Statement statement = connection.createStatement()) {
             statement.execute("DROP TABLE IF EXISTS treatment");
             statement.execute("DROP TABLE IF EXISTS patient");
+            statement.execute("DROP TABLE IF EXISTS employee");
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
@@ -61,6 +67,65 @@ public class SetUpDB {
             statement.execute(SQL);
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
+        }
+    }
+
+    private static void setUpEmployees() {
+        try {
+            EmployeeDao dao = DaoFactory.getDaoFactory().createEmployeeDao();
+
+            String adminSalt = PasswordUtil.generateSalt();
+            String adminHash = PasswordUtil.hash("admin123", adminSalt);
+
+            Employee admin = new Employee(
+                    "Anna",
+                    "Admin",
+                    "admin",
+                    "0421 111111",
+                    adminHash,
+                    adminSalt,
+                    Role.ADMIN
+            );
+
+            dao.create(admin);
+
+            String verwaltungSalt = PasswordUtil.generateSalt();
+            String verwaltungHash = PasswordUtil.hash("verwaltung123", verwaltungSalt);
+
+            Employee verwaltung = new Employee(
+                    "Vera",
+                    "Verwaltung",
+                    "verwaltung",
+                    "0421 222222",
+                    verwaltungHash,
+                    verwaltungSalt,
+                    Role.MITARBEITER
+            );
+
+            dao.create(verwaltung);
+
+            Employee savedVerwaltung = dao.findByUsername("verwaltung");
+            if (savedVerwaltung != null) {
+                dao.updateRole(savedVerwaltung.getEid(), Role.VERWALTUNG);
+            }
+
+            String mitarbeiterSalt = PasswordUtil.generateSalt();
+            String mitarbeiterHash = PasswordUtil.hash("mitarbeiter123", mitarbeiterSalt);
+
+            Employee mitarbeiter = new Employee(
+                    "Max",
+                    "Mitarbeiter",
+                    "mitarbeiter",
+                    "0421 333333",
+                    mitarbeiterHash,
+                    mitarbeiterSalt,
+                    Role.MITARBEITER
+            );
+
+            dao.create(mitarbeiter);
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
     }
 
