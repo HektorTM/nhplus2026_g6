@@ -3,11 +3,23 @@ package de.hitec.nhplus.model;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ * Represents a caregiver (Pflegekraft) employed at the nursing home.
+ * Extends {@link Person} with caregiver-specific attributes.
+ */
 public class Caregiver extends Person {
     private SimpleLongProperty cid;
     private final SimpleStringProperty personnelNumber;
     private final SimpleStringProperty qualification;
 
+    /**
+     * Constructor for a new caregiver that has not been persisted yet (no ID).
+     *
+     * @param firstName       First name of the caregiver.
+     * @param surname         Last name of the caregiver.
+     * @param personnelNumber Unique personnel number.
+     * @param qualification   Qualification or job title of the caregiver.
+     */
     public Caregiver(String firstname, String surname, String personnelNumber, String qualification) {
         super(firstname, surname);
         this.cid = new SimpleLongProperty(0);
@@ -15,6 +27,15 @@ public class Caregiver extends Person {
         this.qualification = new SimpleStringProperty(qualification);
     }
 
+    /**
+     * Constructor for a caregiver loaded from the database (has an ID).
+     *
+     * @param cid             Database ID of the caregiver.
+     * @param firstName       First name of the caregiver.
+     * @param surname         Last name of the caregiver.
+     * @param personnelNumber Unique personnel number.
+     * @param qualification   Qualification or job title of the caregiver.
+     */
     public Caregiver(long cid, String firstName, String surname, String personnelNumber, String qualification) {
         super(firstName, surname);
         this.cid = new SimpleLongProperty(cid);

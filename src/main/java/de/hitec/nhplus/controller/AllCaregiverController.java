@@ -13,6 +13,10 @@ import java.sql.SQLException;
 
 
 
+/**
+ * Controller for the caregiver overview view.
+ * Handles displaying, adding, editing, and deleting caregivers.
+ */
 public class AllCaregiverController {
 
     @FXML private TableView<Caregiver> tableView;
@@ -31,6 +35,10 @@ public class AllCaregiverController {
     private final ObservableList<Caregiver> caregivers = FXCollections.observableArrayList();
     private CaregiverDao dao;
 
+    /**
+     * Initializes the controller. Called automatically by JavaFX after the FXML fields are injected.
+     * Loads all caregivers, configures the table columns, and sets up button state listeners.
+     */
     public void initialize() {
         this.readAllAndShowInTableView();
 
@@ -72,6 +80,10 @@ public class AllCaregiverController {
         }
     }
 
+    /**
+     * Handles the Add button click. Reads input fields, creates a new {@link Caregiver},
+     * persists it via the DAO, refreshes the table, and clears the input fields.
+     */
     @FXML
     public void handleAdd() {
         String firstName = this.textFieldFirstName.getText();
@@ -87,6 +99,10 @@ public class AllCaregiverController {
         clearTextfields();
     }
 
+    /**
+     * Handles the Delete button click. Deletes the selected caregiver from the database
+     * and removes it from the table view.
+     */
     @FXML
     public void handleDelete() {
         Caregiver selectedItem = this.tableView.getSelectionModel().getSelectedItem();
@@ -100,24 +116,44 @@ public class AllCaregiverController {
         }
     }
 
+    /**
+     * Handles inline editing of the first name column.
+     *
+     * @param event Cell edit event containing the updated value.
+     */
     @FXML
     public void handleOnEditFirstName(TableColumn.CellEditEvent<Caregiver, String> event) {
         event.getRowValue().setFirstName(event.getNewValue());
         doUpdate(event);
     }
 
+    /**
+     * Handles inline editing of the surname column.
+     *
+     * @param event Cell edit event containing the updated value.
+     */
     @FXML
     public void handleOnEditSurname(TableColumn.CellEditEvent<Caregiver, String> event) {
         event.getRowValue().setSurname(event.getNewValue());
         doUpdate(event);
     }
 
+    /**
+     * Handles inline editing of the personnel number column.
+     *
+     * @param event Cell edit event containing the updated value.
+     */
     @FXML
     public void handleOnEditPersonnelNumber(TableColumn.CellEditEvent<Caregiver, String> event) {
         event.getRowValue().setPersonnelNumber(event.getNewValue());
         doUpdate(event);
     }
 
+    /**
+     * Handles inline editing of the qualification column.
+     *
+     * @param event Cell edit event containing the updated value.
+     */
     @FXML
     public void handleOnEditQualification(TableColumn.CellEditEvent<Caregiver, String> event) {
         event.getRowValue().setQualification(event.getNewValue());
