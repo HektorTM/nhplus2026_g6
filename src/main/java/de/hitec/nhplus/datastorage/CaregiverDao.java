@@ -15,7 +15,7 @@ public class CaregiverDao extends DaoImp<Caregiver> {
         PreparedStatement preparedStatement = null;
 
         try {
-            final String SQL = "INSERT INTO caregiver (firstname, surname, personnelnNumber, qualification) VALUES (?, ?, ?, ?)";
+            final String SQL = "INSERT INTO caregiver (firstname, surname, personnelNumber, qualification) VALUES (?, ?, ?, ?)";
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setString(1, caregiver.getFirstName());
             preparedStatement.setString(2, caregiver.getSurname());
