@@ -5,26 +5,30 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="926.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.hitec.nhplus.controller.MainWindowController" stylesheets="@Application.css">
-   <left>
-      <VBox id="vBox" alignment="CENTER" spacing="50.0" styleClass="vBox" stylesheets="@Application.css" BorderPane.alignment="CENTER">
-         <children>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowAllPatient" prefWidth="105.0" text="Patienten/innen">
-               <VBox.margin>
-                  <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
-               </VBox.margin>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets></Button>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowAllTreatments" prefWidth="105.0" text="Behandlungen">
-               <VBox.margin>
-                  <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
-               </VBox.margin></Button>
-             <Button fx:id="employeeManagementButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowEmployeeManagement" prefWidth="105.0" text="Rollen">
-                 <VBox.margin>
-                     <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
-                 </VBox.margin>
-             </Button>
-         </children>
-      </VBox>
-   </left>
+    <left>
+        <VBox id="vBox" alignment="CENTER" spacing="15.0" styleClass="vBox" stylesheets="@Application.css" BorderPane.alignment="CENTER">
+            <children>
+                <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowAllPatient" prefWidth="105.0" text="Patienten/innen">
+                    <VBox.margin>
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
+                    </VBox.margin>
+                    <opaqueInsets>
+                        <Insets />
+                    </opaqueInsets>
+                </Button>
+
+                <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowAllTreatments" prefWidth="105.0" text="Behandlungen">
+                    <VBox.margin>
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
+                    </VBox.margin>
+                </Button>
+
+                <Button fx:id="employeeManagementButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowAllCaregivers" prefWidth="105.0" text="Mitarbeiter">
+                    <VBox.margin>
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
+                    </VBox.margin>
+                </Button>
+            </children>
+        </VBox>
+    </left>
 </BorderPane>
