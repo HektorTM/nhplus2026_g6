@@ -50,24 +50,6 @@ public class MainWindowController {
     }
 
     @FXML
-    private void handleShowEmployeeManagement(ActionEvent event) {
-        if (!DEV_MODE && !Session.isAdmin()) {
-            AlertUtil.showError(
-                    "Zugriff verweigert",
-                    "Sie haben keine Berechtigung für die Rollenverwaltung."
-            );
-            return;
-        }
-
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/EmployeeManagementView.fxml"));
-        try {
-            mainBorderPane.setCenter(loader.load());
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    @FXML
     private void handleShowAllCaregivers(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/AllCaregiverView.fxml"));
         try {
