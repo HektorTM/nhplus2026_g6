@@ -5,9 +5,11 @@ import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
 import de.hitec.nhplus.datastorage.CaregiverDao;
+import de.hitec.nhplus.datastorage.UserDao;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
 import de.hitec.nhplus.model.Caregiver;
+import de.hitec.nhplus.model.User;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -15,6 +17,8 @@ import java.sql.Statement;
 
 import static de.hitec.nhplus.utils.DateConverter.convertStringToLocalDate;
 import static de.hitec.nhplus.utils.DateConverter.convertStringToLocalTime;
+import static de.hitec.nhplus.utils.PasswordUtil.generateSalt;
+import static de.hitec.nhplus.utils.PasswordUtil.hash;
 
 /**
  * Call static class provides to static methods to set up and wipe the database. It uses the class ConnectionBuilder
@@ -34,7 +38,9 @@ public class SetUpDB {
         SetUpDB.setUpTablePatient(connection);
         SetUpDB.setUpTableTreatment(connection);
         SetUpDB.setUpTableCaregiver(connection);
+        SetUpDB.setUpTableUser(connection);
         SetUpDB.setUpCaregivers();
+        SetUpDB.setUpUsers();
         SetUpDB.setUpPatients();
         SetUpDB.setUpTreatments();
     }
@@ -47,6 +53,7 @@ public class SetUpDB {
             statement.execute("DROP TABLE IF EXISTS treatment");
             statement.execute("DROP TABLE IF EXISTS patient");
             statement.execute("DROP TABLE IF EXISTS caregiver");
+            statement.execute("DROP TABLE IF EXISTS user");
         } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
@@ -142,6 +149,36 @@ public class SetUpDB {
             dao.create(new Caregiver("Anna", "Müller", "P001", "Examinierte Pflegefachkraft"));
             dao.create(new Caregiver("Ben", "Schmidt", "P002", "Pflegehelfer"));
             dao.create(new Caregiver("Clara", "Weber", "P003", "Krankenschwester"));
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private static void setUpTableUser(Connection connection) {
+        final String SQL = "CREATE TABLE IF NOT EXISTS user (" +
+                "   id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "   username TEXT NOT NULL UNIQUE, " +
+                "   password_hash TEXT NOT NULL, " +
+                "   salt TEXT NOT NULL, " +
+                "   role TEXT NOT NULL DEFAULT 'Mitarbeiter'" +
+                ");";
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(SQL);
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+        }
+    }
+
+    private static void setUpUsers() {
+        try {
+            UserDao dao = DaoFactory.getDaoFactory().createUserDao();
+            String salt = generateSalt();
+            String hash = hash("admin123", salt);
+            dao.create(new User("admin", hash, salt, "Admin"));
+
+            String salt2 = generateSalt();
+            String hash2 = hash("pfleger123", salt2);
+            dao.create(new User("pfleger", hash2, salt2, "Mitarbeiter"));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
