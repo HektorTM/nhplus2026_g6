@@ -4,11 +4,9 @@ import de.hitec.nhplus.datastorage.ConnectionBuilder;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
-import de.hitec.nhplus.datastorage.CaregiverDao;
 import de.hitec.nhplus.datastorage.EmployeeDao;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Treatment;
-import de.hitec.nhplus.model.Caregiver;
 import de.hitec.nhplus.model.Employee;
 import de.hitec.nhplus.model.Role;
 
@@ -39,9 +37,6 @@ public class SetUpDB {
         SetUpDB.setUpTableTreatment(connection);
 
         SetUpDB.setUpEmployees();
-
-        SetUpDB.setUpTableCaregiver(connection);
-        SetUpDB.setUpCaregivers();
 
         SetUpDB.setUpPatients();
         SetUpDB.setUpTreatments();
@@ -107,6 +102,8 @@ public class SetUpDB {
             Employee admin = new Employee(
                     "Anna",
                     "Admin",
+                    "P900",
+                    "Systemadministrator",
                     "admin",
                     "0421 111111",
                     adminHash,
@@ -122,6 +119,8 @@ public class SetUpDB {
             Employee verwaltung = new Employee(
                     "Vera",
                     "Verwaltung",
+                    "P901",
+                    "Verwaltungskraft",
                     "verwaltung",
                     "0421 222222",
                     verwaltungHash,
@@ -142,6 +141,8 @@ public class SetUpDB {
             Employee mitarbeiter = new Employee(
                     "Max",
                     "Mitarbeiter",
+                    "P902",
+                    "Pflegekraft",
                     "mitarbeiter",
                     "0421 333333",
                     mitarbeiterHash,
@@ -151,32 +152,6 @@ public class SetUpDB {
 
             dao.create(mitarbeiter);
 
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    private static void setUpTableCaregiver(Connection connection) {
-        final String SQL = "CREATE TABLE IF NOT EXISTS caregiver (" +
-                "   cid INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "   firstname TEXT NOT NULL, " +
-                "   surname TEXT NOT NULL, " +
-                "   personnelNumber TEXT NOT NULL UNIQUE, " +
-                "   qualification TEXT NOT NULL" +
-                ");";
-        try (Statement statement = connection.createStatement()) {
-            statement.execute(SQL);
-        } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-        }
-    }
-
-    private static void setUpCaregivers() {
-        try {
-            CaregiverDao dao = DaoFactory.getDaoFactory().createCaregiverDao();
-            dao.create(new Caregiver("Anna", "Müller", "P001", "Examinierte Pflegefachkraft"));
-            dao.create(new Caregiver("Ben", "Schmidt", "P002", "Pflegehelfer"));
-            dao.create(new Caregiver("Clara", "Weber", "P003", "Krankenschwester"));
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

@@ -6,6 +6,8 @@ import javafx.beans.property.SimpleStringProperty;
 public class Employee extends Person {
 
     private final SimpleLongProperty eid;
+    private final SimpleStringProperty personnelNumber;
+    private final SimpleStringProperty qualification;
     private final SimpleStringProperty username;
     private final SimpleStringProperty phoneNumber;
     private final SimpleStringProperty passwordHash;
@@ -23,10 +25,12 @@ public class Employee extends Person {
      * @param salt         Salt für das Passwort-Hashing
      * @param role         Rolle des Mitarbeiters
      */
-    public Employee(String firstName, String surname, String username, String phoneNumber,
-                    String passwordHash, String salt, Role role) {
+    public Employee(String firstName, String surname, String personnelNumber, String qualification,
+                    String username, String phoneNumber, String passwordHash, String salt, Role role) {
         super(firstName, surname);
         this.eid = new SimpleLongProperty(0);
+        this.personnelNumber = new SimpleStringProperty(personnelNumber);
+        this.qualification = new SimpleStringProperty(qualification);
         this.username = new SimpleStringProperty(username);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.passwordHash = new SimpleStringProperty(passwordHash);
@@ -46,10 +50,12 @@ public class Employee extends Person {
      * @param salt         Salt für das Passwort-Hashing
      * @param role         Rolle des Mitarbeiters
      */
-    public Employee(long eid, String firstName, String surname, String username, String phoneNumber,
-                    String passwordHash, String salt, Role role) {
+    public Employee(long eid, String firstName, String surname, String personnelNumber, String qualification,
+                    String username, String phoneNumber, String passwordHash, String salt, Role role) {
         super(firstName, surname);
         this.eid = new SimpleLongProperty(eid);
+        this.personnelNumber = new SimpleStringProperty(personnelNumber);
+        this.qualification = new SimpleStringProperty(qualification);
         this.username = new SimpleStringProperty(username);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.passwordHash = new SimpleStringProperty(passwordHash);
@@ -67,6 +73,30 @@ public class Employee extends Person {
 
     public void setEid(long eid) {
         this.eid.set(eid);
+    }
+
+    public String getPersonnelNumber() {
+        return personnelNumber.get();
+    }
+
+    public SimpleStringProperty personnelNumberProperty() {
+        return personnelNumber;
+    }
+
+    public void setPersonnelNumber(String personnelNumber) {
+        this.personnelNumber.set(personnelNumber);
+    }
+
+    public String getQualification() {
+        return qualification.get();
+    }
+
+    public SimpleStringProperty qualificationProperty() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification.set(qualification);
     }
 
     public String getUsername() {
@@ -153,6 +183,8 @@ public class Employee extends Person {
                 "eid=" + getEid() +
                 ", firstName='" + getFirstName() + '\'' +
                 ", surname='" + getSurname() + '\'' +
+                ", personnelNumber='" + getPersonnelNumber() + '\'' +
+                ", qualification='" + getQualification() + '\'' +
                 ", username='" + getUsername() + '\'' +
                 ", phoneNumber='" + getPhoneNumber() + '\'' +
                 ", role=" + getRole() +

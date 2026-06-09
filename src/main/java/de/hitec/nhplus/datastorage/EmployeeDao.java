@@ -26,17 +26,19 @@ public class EmployeeDao extends DaoImp<Employee> {
      */
     private void createTableIfNotExists() {
         final String SQL = """
-                CREATE TABLE IF NOT EXISTS employee (
-                    eid INTEGER PRIMARY KEY AUTOINCREMENT,
-                    firstname TEXT NOT NULL,
-                    surname TEXT NOT NULL,
-                    username TEXT NOT NULL UNIQUE,
-                    phoneNumber TEXT,
-                    passwordHash TEXT NOT NULL,
-                    salt TEXT NOT NULL,
-                    role TEXT NOT NULL DEFAULT 'MITARBEITER'
-                )
-                """;
+            CREATE TABLE IF NOT EXISTS employee (
+                eid INTEGER PRIMARY KEY AUTOINCREMENT,
+                firstname TEXT NOT NULL,
+                surname TEXT NOT NULL,
+                personnelNumber TEXT UNIQUE,
+                qualification TEXT,
+                username TEXT UNIQUE,
+                phoneNumber TEXT,
+                passwordHash TEXT,
+                salt TEXT,
+                role TEXT NOT NULL DEFAULT 'MITARBEITER'
+            )
+            """;
 
         try (Statement statement = this.connection.createStatement()) {
             statement.execute(SQL);
@@ -210,6 +212,8 @@ public class EmployeeDao extends DaoImp<Employee> {
                 result.getLong("eid"),
                 result.getString("firstname"),
                 result.getString("surname"),
+                result.getString("personnelNumber"),
+                result.getString("qualification"),
                 result.getString("username"),
                 result.getString("phoneNumber"),
                 result.getString("passwordHash"),
@@ -235,19 +239,21 @@ public class EmployeeDao extends DaoImp<Employee> {
 
         try {
             final String SQL = """
-                    INSERT INTO employee
-                    (firstname, surname, username, phoneNumber, passwordHash, salt, role)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    """;
+                INSERT INTO employee
+                (firstname, surname, personnelNumber, qualification, username, phoneNumber, passwordHash, salt, role)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """;
 
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setString(1, employee.getFirstName());
             preparedStatement.setString(2, employee.getSurname());
-            preparedStatement.setString(3, employee.getUsername());
-            preparedStatement.setString(4, employee.getPhoneNumber());
-            preparedStatement.setString(5, employee.getPasswordHash());
-            preparedStatement.setString(6, employee.getSalt());
-            preparedStatement.setString(7, employee.getRole().name());
+            preparedStatement.setString(3, employee.getPersonnelNumber());
+            preparedStatement.setString(4, employee.getQualification());
+            preparedStatement.setString(5, employee.getUsername());
+            preparedStatement.setString(6, employee.getPhoneNumber());
+            preparedStatement.setString(7, employee.getPasswordHash());
+            preparedStatement.setString(8, employee.getSalt());
+            preparedStatement.setString(9, employee.getRole().name());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -299,26 +305,30 @@ public class EmployeeDao extends DaoImp<Employee> {
             }
 
             final String SQL = """
-                    UPDATE employee SET
-                        firstname = ?,
-                        surname = ?,
-                        username = ?,
-                        phoneNumber = ?,
-                        passwordHash = ?,
-                        salt = ?,
-                        role = ?
-                    WHERE eid = ?
-                    """;
+                UPDATE employee SET
+                    firstname = ?,
+                    surname = ?,
+                    personnelNumber = ?,
+                    qualification = ?,
+                    username = ?,
+                    phoneNumber = ?,
+                    passwordHash = ?,
+                    salt = ?,
+                    role = ?
+                WHERE eid = ?
+                """;
 
             preparedStatement = this.connection.prepareStatement(SQL);
             preparedStatement.setString(1, employee.getFirstName());
             preparedStatement.setString(2, employee.getSurname());
-            preparedStatement.setString(3, employee.getUsername());
-            preparedStatement.setString(4, employee.getPhoneNumber());
-            preparedStatement.setString(5, employee.getPasswordHash());
-            preparedStatement.setString(6, employee.getSalt());
-            preparedStatement.setString(7, employee.getRole().name());
-            preparedStatement.setLong(8, employee.getEid());
+            preparedStatement.setString(3, employee.getPersonnelNumber());
+            preparedStatement.setString(4, employee.getQualification());
+            preparedStatement.setString(5, employee.getUsername());
+            preparedStatement.setString(6, employee.getPhoneNumber());
+            preparedStatement.setString(7, employee.getPasswordHash());
+            preparedStatement.setString(8, employee.getSalt());
+            preparedStatement.setString(9, employee.getRole().name());
+            preparedStatement.setLong(10, employee.getEid());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
