@@ -4,46 +4,108 @@ import de.hitec.nhplus.model.Employee;
 import de.hitec.nhplus.model.Role;
 
 /**
- * Speichert den aktuell angemeldeten Mitarbeiter.
+ * Stores information about the currently logged-in employee.
  *
- * <p>Der Login setzt nach erfolgreicher Anmeldung den aktuellen Mitarbeiter.
- * Andere Klassen können danach prüfen, welche Rolle der aktuelle Benutzer hat.</p>
+ * <p>Only safe session data is stored here: employee ID, username and role.
+ * Password hash and salt are not stored in the session.</p>
  */
 public final class Session {
 
-    private static Employee currentEmployee;
+    private static Long currentEmployeeId;
+    private static String currentUsername;
+    private static Role currentRole;
 
     private Session() {
-        // Utility-Klasse — keine Instanziierung
+        // Utility class — no instantiation
     }
 
+    /**
+     * Sets the current employee after a successful login.
+     * Only ID, username and role are copied into the session.
+     *
+     * @param employee logged-in employee
+     */
     public static void setCurrentEmployee(Employee employee) {
-        currentEmployee = employee;
+        if (employee == null) {
+            clear();
+            return;
+        }
+
+        currentEmployeeId = employee.getEid();
+        currentUsername = employee.getUsername();
+        currentRole = employee.getRole();
     }
 
-    public static Employee getCurrentEmployee() {
-        return currentEmployee;
+    /**
+     * Returns the ID of the currently logged-in employee.
+     *
+     * @return employee ID or null if no employee is logged in
+     */
+    public static Long getCurrentEmployeeId() {
+        return currentEmployeeId;
     }
 
+    /**
+     * Returns the username of the currently logged-in employee.
+     *
+     * @return username or null if no employee is logged in
+     */
+    public static String getCurrentUsername() {
+        return currentUsername;
+    }
+
+    /**
+     * Returns the role of the currently logged-in employee.
+     *
+     * @return current role or null if no employee is logged in
+     */
+    public static Role getCurrentRole() {
+        return currentRole;
+    }
+
+    /**
+     * Clears the current session, for example during logout.
+     */
     public static void clear() {
-        currentEmployee = null;
+        currentEmployeeId = null;
+        currentUsername = null;
+        currentRole = null;
     }
 
+    /**
+     * Checks whether an employee is currently logged in.
+     *
+     * @return true if a session exists
+     */
     public static boolean isLoggedIn() {
-        return currentEmployee != null;
+        return currentEmployeeId != null && currentRole != null;
     }
 
+    /**
+     * Checks whether the current employee has admin rights.
+     *
+     * @return true if the current role is ADMIN
+     */
     public static boolean isAdmin() {
-        return currentEmployee != null && currentEmployee.getRole() == Role.ADMIN;
+        return currentRole == Role.ADMIN;
     }
 
+    /**
+     * Checks whether the current employee may use administration functions.
+     * Admin and Verwaltung are allowed to use these functions.
+     *
+     * @return true if the current role is ADMIN or VERWALTUNG
+     */
     public static boolean canUseAdministrationFunctions() {
-        return currentEmployee != null
-                && (currentEmployee.getRole() == Role.ADMIN
-                || currentEmployee.getRole() == Role.VERWALTUNG);
+        return currentRole == Role.ADMIN || currentRole == Role.VERWALTUNG;
     }
 
+    /**
+     * Checks whether the current employee has the normal employee role.
+     *
+     * @return true if the current role is MITARBEITER
+     */
     public static boolean isMitarbeiter() {
-        return currentEmployee != null && currentEmployee.getRole() == Role.MITARBEITER;
+        return currentRole == Role.MITARBEITER;
     }
 }
