@@ -1,8 +1,12 @@
 package de.hitec.nhplus.utils;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.TreatmentDao;
+import de.hitec.nhplus.model.Employee;
 import de.hitec.nhplus.model.Patient;
+import de.hitec.nhplus.model.Role;
 import de.hitec.nhplus.model.Treatment;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -30,8 +34,18 @@ public class PdfTest {
      * @param roomNumber Room number of the patient.
      * @param assets Assets of the patient.
      */
-
-
+    @FXML
+    private Button buttonPrint;
+    public PdfTest()
+    {
+        Employee currentUser = Session.getCurrentEmployee();
+        if(currentUser.getRole() == Role.ADMIN || currentUser.getRole() == Role.VERWALTUNG)
+        {
+            buttonPrint.setVisible(true);
+        }
+        else
+            buttonPrint.setVisible(false);
+    }
 
     public void createPatientPdf(Patient patient, List<Treatment> treatments, Window window)
     {

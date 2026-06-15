@@ -108,4 +108,25 @@ public final class Session {
     public static boolean isMitarbeiter() {
         return currentRole == Role.MITARBEITER;
     }
+
+    public static Employee getCurrentEmployee() {
+        if (currentEmployeeId == null || currentRole == null || currentUsername == null) {
+            return null;
+        }
+
+        Employee employee = new Employee(
+                null,        // firstName unbekannt in Session
+                null,        // surname unbekannt in Session
+                null,
+                null,
+                currentUsername,
+                null,
+                null,
+                null,
+                currentRole
+        );
+
+        employee.setEid(currentEmployeeId);
+        return employee;
+    }
 }

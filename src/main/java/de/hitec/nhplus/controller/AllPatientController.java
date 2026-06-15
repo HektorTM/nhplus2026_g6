@@ -17,12 +17,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.utils.DateConverter;
-
+import de.hitec.nhplus.model.Employee;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-
-
+import de.hitec.nhplus.utils.Session;
+import de.hitec.nhplus.model.Role;
 /**
  * The <code>AllPatientController</code> contains the entire logic of the patient view. It determines which data is displayed and how to react to events.
  */
@@ -84,6 +84,8 @@ public class AllPatientController {
      * after loading an FXML-File. At this point of the lifecycle of the Controller, the fields can be accessed and
      * configured.
      */
+    @FXML
+    private Button buttonPrint;
     public void initialize() {
         this.readAllAndShowInTableView();
 
@@ -129,6 +131,14 @@ public class AllPatientController {
         this.textFieldCareLevel.textProperty().addListener(inputNewPatientListener);
         this.textFieldRoomNumber.textProperty().addListener(inputNewPatientListener);
         this.textFieldAssets.textProperty().addListener(inputNewPatientListener);
+
+        Employee currentUser = Session.getCurrentEmployee();
+        if(currentUser.getRole() == Role.ADMIN || currentUser.getRole() == Role.VERWALTUNG)
+        {
+            buttonPrint.setVisible(true);
+        }
+        else
+            buttonPrint.setVisible(false);
     }
 
     /**
@@ -242,8 +252,10 @@ public class AllPatientController {
         }
     }
 
-    @FXML
+
     public void handlePrint() {
+
+
         Patient selectedItem = this.tableView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             try {

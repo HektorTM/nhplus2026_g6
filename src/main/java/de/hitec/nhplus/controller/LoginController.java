@@ -4,11 +4,13 @@ import de.hitec.nhplus.Main;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.EmployeeDao;
 import de.hitec.nhplus.model.Employee;
+import de.hitec.nhplus.model.Role;
 import de.hitec.nhplus.utils.Session;
 import de.hitec.nhplus.utils.PasswordUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -87,6 +89,7 @@ public class LoginController {
     /**
      * Loads the main window and replaces the login scene on the same stage.
      */
+
     private void loadMainWindow() {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("/de/hitec/nhplus/MainWindowView.fxml"));
