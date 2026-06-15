@@ -2,6 +2,8 @@ package de.hitec.nhplus.controller;
 
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
+import de.hitec.nhplus.model.Treatment;
+import de.hitec.nhplus.utils.PdfTest;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,6 +20,7 @@ import de.hitec.nhplus.utils.DateConverter;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 
 /**
@@ -233,6 +236,20 @@ public class AllPatientController {
             try {
                 DaoFactory.getDaoFactory().createPatientDao().deleteById(selectedItem.getPid());
                 this.tableView.getItems().remove(selectedItem);
+            } catch (SQLException exception) {
+                exception.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    public void handlePrint() {
+        Patient selectedItem = this.tableView.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            try {
+                List<Treatment> treatments = DaoFactory.getDaoFactory().createTreatmentDao().readTreatmentsByPid(selectedItem.getPid());
+                PdfTest pdf = new PdfTest();
+                pdf.createPatientPdf(selectedItem, treatments, tableView.getScene().getWindow());
             } catch (SQLException exception) {
                 exception.printStackTrace();
             }

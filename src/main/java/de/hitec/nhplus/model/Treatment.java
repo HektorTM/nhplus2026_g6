@@ -35,6 +35,7 @@ public class Treatment {
         this.remarks = remarks;
     }
 
+
     /**
      * Constructor to initiate an object of class <code>Treatment</code> with the given parameter. Use this constructor
      * to initiate objects, which are already persisted and have a treatment id (tid).

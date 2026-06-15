@@ -1,6 +1,7 @@
 module de.hitec.nhplus {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.apache.pdfbox;
 
     requires org.controlsfx.controls;
     requires java.sql;
