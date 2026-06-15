@@ -2,13 +2,13 @@ package de.hitec.nhplus.utils;
 
 import de.hitec.nhplus.datastorage.ConnectionBuilder;
 import de.hitec.nhplus.datastorage.DaoFactory;
+import de.hitec.nhplus.datastorage.EmployeeDao;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.datastorage.TreatmentDao;
-import de.hitec.nhplus.datastorage.EmployeeDao;
-import de.hitec.nhplus.model.Patient;
-import de.hitec.nhplus.model.Treatment;
 import de.hitec.nhplus.model.Employee;
+import de.hitec.nhplus.model.Patient;
 import de.hitec.nhplus.model.Role;
+import de.hitec.nhplus.model.Treatment;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,18 +17,8 @@ import java.sql.Statement;
 import static de.hitec.nhplus.utils.DateConverter.convertStringToLocalDate;
 import static de.hitec.nhplus.utils.DateConverter.convertStringToLocalTime;
 
-/**
- * Call static class provides to static methods to set up and wipe the database. It uses the class ConnectionBuilder
- * and its path to build up the connection to the database. The class is executable. Executing the class will build
- * up a connection to the database and calls setUpDb() to wipe the database, build up a clean database and fill the
- * database with some test data.
- */
 public class SetUpDB {
 
-    /**
-     * This method wipes the database by dropping the tables. Then the method calls DDL statements to build it up from
-     * scratch and DML statements to fill the database with hard coded test data.
-     */
     public static void setUpDb() {
         Connection connection = ConnectionBuilder.getConnection();
         SetUpDB.wipeDb(connection);
@@ -37,14 +27,10 @@ public class SetUpDB {
         SetUpDB.setUpTableTreatment(connection);
 
         SetUpDB.setUpEmployees();
-
         SetUpDB.setUpPatients();
         SetUpDB.setUpTreatments();
     }
 
-    /**
-     * This method wipes the database by dropping the tables.
-     */
     public static void wipeDb(Connection connection) {
         try (Statement statement = connection.createStatement()) {
             statement.execute("DROP TABLE IF EXISTS treatment");
