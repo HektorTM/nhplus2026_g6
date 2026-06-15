@@ -34,18 +34,7 @@ public class PdfTest {
      * @param roomNumber Room number of the patient.
      * @param assets Assets of the patient.
      */
-    @FXML
-    private Button buttonPrint;
-    public PdfTest()
-    {
-        Employee currentUser = Session.getCurrentEmployee();
-        if(currentUser.getRole() == Role.ADMIN || currentUser.getRole() == Role.VERWALTUNG)
-        {
-            buttonPrint.setVisible(true);
-        }
-        else
-            buttonPrint.setVisible(false);
-    }
+
 
     public void createPatientPdf(Patient patient, List<Treatment> treatments, Window window)
     {
