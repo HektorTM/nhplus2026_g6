@@ -125,8 +125,8 @@ public final class Session {
         }
 
         Employee employee = new Employee(
-                null,        // firstName unbekannt in Session
-                null,        // surname unbekannt in Session
+                null,        // firstName not available in session
+                null,        // surname not available in session
                 null,
                 null,
                 currentUsername,

@@ -21,7 +21,7 @@ public class ConnectionBuilder {
                 ConnectionBuilder.connection = DriverManager.getConnection(URL, configuration.toProperties());
             }
         } catch (SQLException exception) {
-            System.out.println("Verbindung zur Datenbank konnte nicht aufgebaut werden!");
+            System.out.println("Could not establish connection to database!");
             exception.printStackTrace();
         }
         return ConnectionBuilder.connection;

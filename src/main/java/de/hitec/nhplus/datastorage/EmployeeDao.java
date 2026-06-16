@@ -7,11 +7,11 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
- * DAO-Klasse für Mitarbeiterkonten.
+ * DAO class for employee accounts.
  *
- * <p>Diese Klasse verwaltet die separate Tabelle für Mitarbeiter,
- * Login-Daten und Rollen. Außerdem enthält sie Schutzregeln für Admins:
- * Es muss immer mindestens ein Admin im System bleiben.</p>
+ * <p>This class manages the separate table for employees,
+ * login credentials, and roles. It also contains protection rules for admins:
+ * at least one admin must always remain in the system.</p>
  */
 public class EmployeeDao extends DaoImp<Employee> {
 
@@ -22,7 +22,7 @@ public class EmployeeDao extends DaoImp<Employee> {
     }
 
     /**
-     * Erstellt die Tabelle für Mitarbeiterkonten, falls sie noch nicht existiert.
+     * Creates the employee accounts table if it does not already exist.
      */
     private void createTableIfNotExists() {
         final String SQL = """
@@ -48,7 +48,7 @@ public class EmployeeDao extends DaoImp<Employee> {
     }
 
     /**
-     * Setzt für Mitarbeiter ohne Rolle automatisch die Standardrolle MITARBEITER.
+     * Automatically assigns the default role MITARBEITER to employees without a role.
      */
     private void assignDefaultRoleToEmployeesWithoutRole() {
         final String SQL = """
@@ -65,14 +65,14 @@ public class EmployeeDao extends DaoImp<Employee> {
     }
 
     /**
-     * Erstellt einen neuen Mitarbeiter.
+     * Creates a new employee.
      *
-     * <p>Wenn noch kein Admin existiert, wird der erste registrierte
-     * Mitarbeiter automatisch Admin. Wenn bereits ein Admin existiert,
-     * erhält der neue Mitarbeiter automatisch die Rolle Mitarbeiter.</p>
+     * <p>If no admin exists yet, the first registered employee is automatically
+     * made admin. If an admin already exists, the new employee receives the
+     * MITARBEITER role automatically.</p>
      *
-     * @param employee Mitarbeiter, der gespeichert werden soll
-     * @throws SQLException wenn das Speichern fehlschlägt
+     * @param employee employee to be saved
+     * @throws SQLException if saving fails
      */
     @Override
     public void create(Employee employee) throws SQLException {
@@ -86,10 +86,10 @@ public class EmployeeDao extends DaoImp<Employee> {
     }
 
     /**
-     * Prüft, ob mindestens ein Admin existiert.
+     * Checks whether at least one admin exists.
      *
-     * @return true, wenn mindestens ein Admin vorhanden ist
-     * @throws SQLException bei Datenbankfehlern
+     * @return true if at least one admin is present
+     * @throws SQLException on database errors
      */
     public boolean adminExists() throws SQLException {
         final String SQL = "SELECT COUNT(*) FROM employee WHERE role = ?";
@@ -104,10 +104,10 @@ public class EmployeeDao extends DaoImp<Employee> {
     }
 
     /**
-     * Zählt alle Admins in der Mitarbeiterdatenbank.
+     * Counts all admins in the employee database.
      *
-     * @return Anzahl der Admins
-     * @throws SQLException bei Datenbankfehlern
+     * @return number of admins
+     * @throws SQLException on database errors
      */
     public int countAdmins() throws SQLException {
         final String SQL = "SELECT COUNT(*) FROM employee WHERE role = ?";
@@ -126,13 +126,13 @@ public class EmployeeDao extends DaoImp<Employee> {
     }
 
     /**
-     * Sucht einen Mitarbeiter anhand des Benutzernamens.
+     * Finds an employee by username.
      *
-     * <p>Diese Methode wird später vom Login benötigt.</p>
+     * <p>This method is used by the login process.</p>
      *
-     * @param username Benutzername
-     * @return Mitarbeiter oder null, wenn kein Mitarbeiter gefunden wurde
-     * @throws SQLException bei Datenbankfehlern
+     * @param username username
+     * @return employee or null if no employee was found
+     * @throws SQLException on database errors
      */
     public Employee findByUsername(String username) throws SQLException {
         final String SQL = "SELECT * FROM employee WHERE username = ?";
@@ -151,26 +151,26 @@ public class EmployeeDao extends DaoImp<Employee> {
     }
 
     /**
-     * Ändert die Rolle eines Mitarbeiters.
+     * Changes the role of an employee.
      *
-     * <p>Die Rolle des letzten Admins darf nicht geändert werden, damit
-     * immer mindestens ein Admin im System vorhanden bleibt.</p>
+     * <p>The role of the last admin may not be changed, so that
+     * at least one admin always remains in the system.</p>
      *
-     * @param employeeId ID des Mitarbeiters
-     * @param newRole    neue Rolle
-     * @throws SQLException wenn die Änderung nicht erlaubt ist oder fehlschlägt
+     * @param employeeId employee ID
+     * @param newRole    new role
+     * @throws SQLException if the change is not permitted or fails
      */
     public void updateRole(long employeeId, Role newRole) throws SQLException {
         Employee employee = read(employeeId);
 
         if (employee == null) {
-            throw new SQLException("Mitarbeiter wurde nicht gefunden.");
+            throw new SQLException("Employee not found.");
         }
 
         Role currentRole = employee.getRole();
 
         if (currentRole == Role.ADMIN && newRole != Role.ADMIN && countAdmins() <= 1) {
-            throw new SQLException("Die Rolle des letzten Admins darf nicht geändert werden.");
+            throw new SQLException("The role of the last admin cannot be changed.");
         }
 
         final String SQL = "UPDATE employee SET role = ? WHERE eid = ?";
@@ -183,24 +183,24 @@ public class EmployeeDao extends DaoImp<Employee> {
     }
 
     /**
-     * Verhindert das direkte Löschen eines Admin-Accounts.
+     * Prevents direct deletion of an admin account.
      *
-     * <p>Ein Admin muss zuerst auf Verwaltung oder Mitarbeiter geändert werden.
-     * Dadurch wird vermieden, dass Admins versehentlich direkt gelöscht werden.</p>
+     * <p>An admin must first be changed to Verwaltung or Mitarbeiter.
+     * This avoids admins being accidentally deleted directly.</p>
      *
-     * @param employeeId ID des Mitarbeiters
-     * @throws SQLException wenn der Mitarbeiter Admin ist oder das Löschen fehlschlägt
+     * @param employeeId employee ID
+     * @throws SQLException if the employee is an admin or deletion fails
      */
     @Override
     public void deleteById(long employeeId) throws SQLException {
         Employee employee = read(employeeId);
 
         if (employee == null) {
-            throw new SQLException("Mitarbeiter wurde nicht gefunden.");
+            throw new SQLException("Employee not found.");
         }
 
         if (employee.getRole() == Role.ADMIN) {
-            throw new SQLException("Ein Admin kann nicht direkt gelöscht werden. Ändern Sie zuerst die Rolle.");
+            throw new SQLException("An admin cannot be deleted directly. Change the role first.");
         }
 
         super.deleteById(employeeId);
@@ -301,7 +301,7 @@ public class EmployeeDao extends DaoImp<Employee> {
                     && oldEmployee.getRole() == Role.ADMIN
                     && employee.getRole() != Role.ADMIN
                     && countAdmins() <= 1) {
-                throw new SQLException("Die Rolle des letzten Admins darf nicht geändert werden.");
+                throw new SQLException("The role of the last admin cannot be changed.");
             }
 
             final String SQL = """

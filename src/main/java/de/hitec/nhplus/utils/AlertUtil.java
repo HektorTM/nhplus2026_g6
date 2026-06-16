@@ -3,19 +3,19 @@ package de.hitec.nhplus.utils;
 import javafx.scene.control.Alert;
 
 /**
- * Hilfsklasse zum Anzeigen von einfachen Meldungen in der JavaFX-Oberfläche.
+ * Utility class for displaying simple messages in the JavaFX interface.
  */
 public final class AlertUtil {
 
     private AlertUtil() {
-        // Utility-Klasse — keine Instanziierung
+        // Utility class — no instantiation
     }
 
     /**
-     * Zeigt eine Fehlermeldung an.
+     * Displays an error message.
      *
-     * @param title   Titel des Fensters
-     * @param message Inhalt der Fehlermeldung
+     * @param title   window title
+     * @param message error message content
      */
     public static void showError(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -26,10 +26,10 @@ public final class AlertUtil {
     }
 
     /**
-     * Zeigt eine Information an.
+     * Displays an information message.
      *
-     * @param title   Titel des Fensters
-     * @param message Inhalt der Information
+     * @param title   window title
+     * @param message information content
      */
     public static void showInfo(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -40,10 +40,10 @@ public final class AlertUtil {
     }
 
     /**
-     * Zeigt eine Warnung an.
+     * Displays a warning message.
      *
-     * @param title   Titel des Fensters
-     * @param message Inhalt der Warnung
+     * @param title   window title
+     * @param message warning content
      */
     public static void showWarning(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);

@@ -15,15 +15,15 @@ public class Employee extends Person {
     private final SimpleStringProperty role;
 
     /**
-     * Konstruktor für neue Mitarbeiter, die noch nicht in der Datenbank gespeichert sind.
+     * Constructor for new employees who have not yet been saved to the database.
      *
-     * @param firstName    Vorname des Mitarbeiters
-     * @param surname      Nachname des Mitarbeiters
-     * @param username     Benutzername für den Login
-     * @param phoneNumber  Telefonnummer des Mitarbeiters
-     * @param passwordHash gehashter Passwortwert
-     * @param salt         Salt für das Passwort-Hashing
-     * @param role         Rolle des Mitarbeiters
+     * @param firstName    first name of the employee
+     * @param surname      last name of the employee
+     * @param username     username for login
+     * @param phoneNumber  phone number of the employee
+     * @param passwordHash hashed password value
+     * @param salt         salt for password hashing
+     * @param role         role of the employee
      */
     public Employee(String firstName, String surname, String personnelNumber, String qualification,
                     String username, String phoneNumber, String passwordHash, String salt, Role role) {
@@ -39,16 +39,16 @@ public class Employee extends Person {
     }
 
     /**
-     * Konstruktor für Mitarbeiter, die bereits in der Datenbank gespeichert sind.
+     * Constructor for employees who are already saved in the database.
      *
-     * @param eid          ID des Mitarbeiters
-     * @param firstName    Vorname des Mitarbeiters
-     * @param surname      Nachname des Mitarbeiters
-     * @param username     Benutzername für den Login
-     * @param phoneNumber  Telefonnummer des Mitarbeiters
-     * @param passwordHash gehashter Passwortwert
-     * @param salt         Salt für das Passwort-Hashing
-     * @param role         Rolle des Mitarbeiters
+     * @param eid          employee ID
+     * @param firstName    first name of the employee
+     * @param surname      last name of the employee
+     * @param username     username for login
+     * @param phoneNumber  phone number of the employee
+     * @param passwordHash hashed password value
+     * @param salt         salt for password hashing
+     * @param role         role of the employee
      */
     public Employee(long eid, String firstName, String surname, String personnelNumber, String qualification,
                     String username, String phoneNumber, String passwordHash, String salt, Role role) {
@@ -160,18 +160,18 @@ public class Employee extends Person {
     }
 
     /**
-     * Prüft, ob der Mitarbeiter Admin-Rechte besitzt.
+     * Checks whether the employee has admin rights.
      *
-     * @return true, wenn der Mitarbeiter die Rolle ADMIN hat
+     * @return true if the employee has the ADMIN role
      */
     public boolean isAdmin() {
         return getRole() == Role.ADMIN;
     }
 
     /**
-     * Prüft, ob der Mitarbeiter Verwaltungsrechte besitzt.
+     * Checks whether the employee has administration rights.
      *
-     * @return true, wenn der Mitarbeiter ADMIN oder VERWALTUNG ist
+     * @return true if the employee is ADMIN or VERWALTUNG
      */
     public boolean canUseAdministrationFunctions() {
         return getRole() == Role.ADMIN || getRole() == Role.VERWALTUNG;

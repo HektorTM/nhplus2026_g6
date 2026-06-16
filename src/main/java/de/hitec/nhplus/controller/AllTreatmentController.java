@@ -99,7 +99,7 @@ public class AllTreatmentController {
                 this.patientSelection.add(formatPatientDisplayName(patient));
             }
             comboBoxPatientSelection.setItems(patientSelection);
-            comboBoxPatientSelection.getSelectionModel().selectFirst(); // "alle" wird vorausgewählt
+            comboBoxPatientSelection.getSelectionModel().selectFirst(); // "all" is pre-selected
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

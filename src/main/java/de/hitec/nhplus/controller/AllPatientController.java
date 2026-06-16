@@ -111,7 +111,7 @@ public class AllPatientController {
         this.columnAssets.setCellValueFactory(new PropertyValueFactory<>("assets"));
         this.columnAssets.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        //Anzeigen der Daten
+        // Display the data
         this.tableView.setItems(this.patients);
 
         this.buttonDelete.setDisable(true);

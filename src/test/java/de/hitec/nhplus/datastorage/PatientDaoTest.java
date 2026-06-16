@@ -13,10 +13,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Beispiel-Testklasse für die PatientDao-Klasse.
- * Nutzt eine separate Test-Datenbank, um die Produktionsdaten nicht zu verändern.
+ * Example test class for the PatientDao class.
+ * Uses a separate test database to avoid modifying production data.
  *
- * Diese Klasse dient als Vorlage: Erstellt analog dazu Tests für eure eigenen DAO-Klassen.
+ * This class serves as a template: create tests for your own DAO classes in the same way.
  */
 class PatientDaoTest {
 
@@ -24,11 +24,11 @@ class PatientDaoTest {
     private PatientDao dao;
 
     /**
-     * Wird einmal vor allen Tests ausgeführt: Erstellt eine Test-Datenbank im Arbeitsspeicher.
+     * Runs once before all tests: creates an in-memory test database.
      */
     @BeforeAll
     static void setUpDatabase() throws SQLException {
-        // In-Memory-Datenbank: existiert nur während der Tests
+        // In-memory database: only exists during the tests
         connection = DriverManager.getConnection("jdbc:sqlite::memory:");
 
         try (Statement statement = connection.createStatement()) {
@@ -46,8 +46,8 @@ class PatientDaoTest {
     }
 
     /**
-     * Wird vor jedem einzelnen Test ausgeführt: Erstellt ein frisches DAO-Objekt
-     * und leert die Tabelle, damit Tests sich nicht gegenseitig beeinflussen.
+     * Runs before each individual test: creates a fresh DAO object
+     * and clears the table so tests do not interfere with each other.
      */
     @BeforeEach
     void setUp() throws SQLException {
@@ -58,7 +58,7 @@ class PatientDaoTest {
     }
 
     /**
-     * Wird einmal nach allen Tests ausgeführt: Schließt die Datenbankverbindung.
+     * Runs once after all tests: closes the database connection.
      */
     @AfterAll
     static void tearDown() throws SQLException {
@@ -68,21 +68,21 @@ class PatientDaoTest {
     }
 
     @Test
-    @DisplayName("create() und readAll(): Ein neuer Patient wird gespeichert und kann gelesen werden")
+    @DisplayName("create() and readAll(): A new patient is saved and can be read")
     void createAndReadAll() throws SQLException {
-        // Arrange: Einen neuen Patienten vorbereiten
+        // Arrange: prepare a new patient
         Patient patient = new Patient(
                 "Max", "Mustermann",
                 LocalDate.of(1990, 5, 15),
                 "3", "101", "normal"
         );
 
-        // Act: Patienten in der Datenbank anlegen und alle Patienten auslesen
+        // Act: create patient in database and read all patients
         dao.create(patient);
         List<Patient> allPatients = dao.readAll();
 
-        // Assert: Genau ein Patient sollte vorhanden sein
-        assertEquals(1, allPatients.size(), "Es sollte genau ein Patient in der Datenbank sein");
+        // Assert: exactly one patient should be present
+        assertEquals(1, allPatients.size(), "There should be exactly one patient in the database");
 
         Patient loaded = allPatients.get(0);
         assertEquals("Max", loaded.getFirstName());
@@ -92,9 +92,9 @@ class PatientDaoTest {
     }
 
     @Test
-    @DisplayName("deleteById(): Ein gelöschter Patient ist nicht mehr auffindbar")
+    @DisplayName("deleteById(): A deleted patient is no longer retrievable")
     void deleteById() throws SQLException {
-        // Arrange: Einen Patienten anlegen
+        // Arrange: create a patient
         Patient patient = new Patient(
                 "Erika", "Musterfrau",
                 LocalDate.of(1985, 3, 20),
@@ -102,16 +102,16 @@ class PatientDaoTest {
         );
         dao.create(patient);
 
-        // Die ID des angelegten Patienten ermitteln
+        // Get the ID of the created patient
         List<Patient> allPatients = dao.readAll();
         assertEquals(1, allPatients.size());
         long pid = allPatients.get(0).getPid();
 
-        // Act: Patienten löschen
+        // Act: delete patient
         dao.deleteById(pid);
 
-        // Assert: Kein Patient sollte mehr vorhanden sein
+        // Assert: no patient should be present anymore
         List<Patient> afterDelete = dao.readAll();
-        assertTrue(afterDelete.isEmpty(), "Nach dem Löschen sollte kein Patient mehr vorhanden sein");
+        assertTrue(afterDelete.isEmpty(), "After deletion, no patient should be present");
     }
 }

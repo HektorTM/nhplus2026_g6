@@ -2,14 +2,14 @@ package de.hitec.nhplus.model;
 
 /**
  * ADMIN:
- * Hat Zugriff auf alle Funktionen, inklusive Rollenverwaltung.
+ * Has access to all functions, including role management.
  *
  * VERWALTUNG:
- * Hat Zugriff auf Verwaltungsfunktionen, z. B. Export,
- * aber keinen Zugriff auf die Rollenverwaltung.
+ * Has access to administration functions, e.g. export,
+ * but no access to role management.
  *
  * MITARBEITER:
- * Standardrolle für normale Mitarbeiter.
+ * Default role for regular employees.
  */
 public enum Role {
     ADMIN,
