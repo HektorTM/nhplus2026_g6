@@ -2,19 +2,19 @@ package de.hitec.nhplus.datastorage;
 
 import de.hitec.nhplus.model.Employee;
 import de.hitec.nhplus.model.Role;
-import de.hitec.nhplus.utils.PasswordUtil;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for EmployeeDao.
- * Uses an in-memory database to avoid modifying production data.
+ * Test class for the EmployeeDao class.
+ * Uses a separate in-memory database to avoid modifying production data.
  */
 class EmployeeDaoTest {
 
@@ -22,7 +22,7 @@ class EmployeeDaoTest {
     private EmployeeDao dao;
 
     /**
-     * Runs once before all tests: creates an in-memory database.
+     * Runs once before all tests: creates an in-memory test database.
      */
     @BeforeAll
     static void setUpDatabase() throws SQLException {
@@ -30,7 +30,8 @@ class EmployeeDaoTest {
     }
 
     /**
-     * Runs before each test: creates a fresh DAO and clears the table.
+     * Runs before each individual test: creates a fresh DAO object
+     * and clears the table so tests do not interfere with each other.
      */
     @BeforeEach
     void setUp() throws SQLException {
@@ -51,57 +52,119 @@ class EmployeeDaoTest {
     }
 
     @Test
-    @DisplayName("create(): First employee is automatically assigned the ADMIN role")
-    void firstEmployeeBecomesAdmin() throws SQLException {
-        String salt = PasswordUtil.generateSalt();
+    @DisplayName("create() and readAll(): A new employee is saved and can be read")
+    void createAndReadAll() throws SQLException {
+        // Arrange
         Employee employee = new Employee(
-                "Anna", "Admin", "P001", "Systemadministrator",
-                "anna", "0421 111111", PasswordUtil.hash("test123", salt), salt, null
+                "Anna", "Müller", "P001", "Krankenpflege",
+                "amueller", "0421123456", "hash", "salt", Role.MITARBEITER
         );
 
+        // Act
         dao.create(employee);
+        List<Employee> all = dao.readAll();
 
-        Employee loaded = dao.findByUsername("anna");
-        assertNotNull(loaded);
-        assertEquals(Role.ADMIN, loaded.getRole(), "First employee should automatically become ADMIN");
+        // Assert
+        assertEquals(1, all.size(), "There should be exactly one employee in the database");
+
+        Employee loaded = all.get(0);
+        assertEquals("Anna", loaded.getFirstName());
+        assertEquals("Müller", loaded.getSurname());
+        assertEquals("amueller", loaded.getUsername());
     }
 
     @Test
-    @DisplayName("create(): Second employee is automatically assigned the MITARBEITER role")
+    @DisplayName("create(): The first employee automatically becomes ADMIN")
+    void firstEmployeeBecomesAdmin() throws SQLException {
+        // Arrange
+        Employee employee = new Employee(
+                "Max", "Mustermann", "P002", "Verwaltung",
+                "mmustermann", "0421654321", "hash", "salt", Role.MITARBEITER
+        );
+
+        // Act
+        dao.create(employee);
+        List<Employee> all = dao.readAll();
+
+        // Assert
+        assertEquals(1, all.size());
+        assertEquals(Role.ADMIN, all.get(0).getRole(),
+                "The first employee should automatically receive the ADMIN role");
+    }
+
+    @Test
+    @DisplayName("create(): The second employee automatically becomes MITARBEITER")
     void secondEmployeeGetsMitarbeiter() throws SQLException {
-        String salt1 = PasswordUtil.generateSalt();
-        Employee admin = new Employee(
-                "Anna", "Admin", "P001", "Systemadministrator",
-                "anna", "0421 111111", PasswordUtil.hash("admin123", salt1), salt1, null
+        // Arrange
+        Employee first = new Employee(
+                "Anna", "Admin", "P001", "Leitung",
+                "aadmin", "0421000001", "hash", "salt", Role.MITARBEITER
         );
-        dao.create(admin);
-
-        String salt2 = PasswordUtil.generateSalt();
         Employee second = new Employee(
-                "Max", "Muster", "P002", "Pflegekraft",
-                "max", "0421 222222", PasswordUtil.hash("test456", salt2), salt2, null
+                "Max", "Muster", "P002", "Pflege",
+                "mmuster", "0421000002", "hash", "salt", Role.MITARBEITER
         );
-        dao.create(second);
 
-        Employee loaded = dao.findByUsername("max");
-        assertNotNull(loaded);
-        assertEquals(Role.MITARBEITER, loaded.getRole(), "Second employee should automatically get MITARBEITER");
+        // Act
+        dao.create(first);
+        dao.create(second);
+        List<Employee> all = dao.readAll();
+
+        // Assert
+        assertEquals(2, all.size());
+        Employee loaded = all.stream()
+                .filter(e -> e.getUsername().equals("mmuster"))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(Role.MITARBEITER, loaded.getRole(),
+                "The second employee should automatically receive the MITARBEITER role");
     }
 
     @Test
-    @DisplayName("deleteById(): Deleting the last admin throws a SQLException")
-    void deleteLastAdminThrowsException() throws SQLException {
-        String salt = PasswordUtil.generateSalt();
+    @DisplayName("deleteById(): A non-admin employee can be deleted successfully")
+    void deleteNonAdminSucceeds() throws SQLException {
+        // Arrange: create two employees so the second is not admin
         Employee admin = new Employee(
-                "Anna", "Admin", "P001", "Systemadministrator",
-                "anna", "0421 111111", PasswordUtil.hash("admin123", salt), salt, null
+                "Chef", "Admin", "P003", "Leitung",
+                "cadmin", "0421000001", "hash", "salt", Role.ADMIN
+        );
+        Employee mitarbeiter = new Employee(
+                "Hans", "Schmidt", "P004", "Pflege",
+                "hschmidt", "0421000002", "hash", "salt", Role.MITARBEITER
+        );
+        dao.create(admin);
+        dao.create(mitarbeiter);
+
+        // Get the pid of the Mitarbeiter
+        List<Employee> all = dao.readAll();
+        Employee toDelete = all.stream()
+                .filter(e -> e.getRole() == Role.MITARBEITER)
+                .findFirst()
+                .orElseThrow();
+
+        // Act
+        dao.deleteById(toDelete.getEid());
+
+        // Assert
+        List<Employee> afterDelete = dao.readAll();
+        assertEquals(1, afterDelete.size(), "Only the admin should remain");
+        assertEquals(Role.ADMIN, afterDelete.get(0).getRole());
+    }
+
+    @Test
+    @DisplayName("deleteById(): Deleting an admin directly throws SQLException")
+    void deleteAdminThrowsException() throws SQLException {
+        // Arrange
+        Employee admin = new Employee(
+                "Root", "Admin", "P005", "Leitung",
+                "radmin", "0421000003", "hash", "salt", Role.ADMIN
         );
         dao.create(admin);
 
-        Employee loaded = dao.findByUsername("anna");
-        assertNotNull(loaded);
+        long eid = dao.readAll().get(0).getEid();
 
-        assertThrows(SQLException.class, () -> dao.deleteById(loaded.getEid()),
-                "Deleting the last admin should throw a SQLException");
+        // Act & Assert
+        assertThrows(SQLException.class, () -> dao.deleteById(eid),
+                "Deleting an admin directly should throw a SQLException");
     }
 }
