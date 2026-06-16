@@ -16,31 +16,21 @@ import java.nio.file.Files;
 import java.util.List;
 
 /**
- * Utility-Klasse zum Erstellen von PDF- und JSON-Dateien
- * für Patientendaten inklusive Behandlungen.
+ * Helper class for creating PDF and JSON files
+ * containing patient data.
  *
- * <p>Erzeugt eine strukturierte PDF-Datei mit Patientendaten
- * sowie eine ergänzende JSON-Datei im gleichen Verzeichnis.</p>
+ * Generates a structured PDF file with patient information
+ * as well as a corresponding JSON file in the same directory.
  */
 public class PdfTest {
-
     /**
-     * Startpunkt (aktuell nicht verwendet).
+     * Creates a PDF document containing patient data and treatments
+     * and saves it via a file dialog.
+     * Additionally, a JSON file with the same data is generated.
      *
-     * @param args Programmargumente
-     */
-    public static void main(String[] args) {
-        // nicht implementiert
-    }
-
-    /**
-     * Erstellt ein PDF-Dokument mit Patientendaten und Behandlungen
-     * und speichert es über einen Dateidialog.
-     * Zusätzlich wird eine JSON-Datei mit denselben Daten erzeugt.
-     *
-     * @param patient   der Patient, dessen Daten exportiert werden
-     * @param treatments Liste der Behandlungen des Patienten
-     * @param window    JavaFX-Fenster für den Speicherdialog
+     * @param patient    the patient whose data is being exported
+     * @param treatments list of treatments of the patient
+     * @param window     JavaFX window for the save dialog
      */
     public void createPatientPdf(Patient patient, List<Treatment> treatments, Window window) {
         try (PDDocument document = new PDDocument()) {
@@ -148,12 +138,15 @@ public class PdfTest {
 
                 System.out.println("PDF gespeichert: " + file.getAbsolutePath());
 
-                // JSON Export
+                // JSON Export nach dem PDF export
+                //.pdf aus dem Pfad davor durch .json ersetzen
                 String jsonPath = file.getAbsolutePath().replace(".pdf", ".json");
                 File jsonFile = new File(jsonPath);
 
+                //Inhalt erzeugen
                 String json = buildPatientJson(patient, treatments);
 
+                //Inhalt schreiben
                 Files.writeString(jsonFile.toPath(), json);
 
                 System.out.println("JSON gespeichert: " + jsonFile.getAbsolutePath());
@@ -168,12 +161,12 @@ public class PdfTest {
     }
 
     /**
-     * Erstellt eine JSON-Repräsentation eines Patienten
-     * inklusive seiner Behandlungen.
+     * Creates a JSON representation of a patient
+     * including their treatments.
      *
-     * @param patient    der Patient
-     * @param treatments Liste der Behandlungen
-     * @return JSON-String
+     * @param patient    the patient
+     * @param treatments list of treatments
+     * @return JSON string
      */
     private String buildPatientJson(Patient patient, List<Treatment> treatments) {
 

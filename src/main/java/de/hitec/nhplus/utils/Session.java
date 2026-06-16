@@ -109,6 +109,16 @@ public final class Session {
         return currentRole == Role.MITARBEITER;
     }
 
+
+    /**
+     * Returns the currently logged-in employee as an {@link Employee} object.
+     * The data is reconstructed from the stored session values.
+     *
+     * If no employee is currently logged in (missing id, role, or username),
+     * this method returns {@code null}.
+     *
+     * @return the current {@link Employee} or {@code null} if no session is active
+     */
     public static Employee getCurrentEmployee() {
         if (currentEmployeeId == null || currentRole == null || currentUsername == null) {
             return null;

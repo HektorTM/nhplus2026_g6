@@ -252,9 +252,13 @@ public class AllPatientController {
         }
     }
 
-
+    /**
+     * This method handles the event triggered by the print button.
+     * It retrieves the selected patient from the TableView, loads all related treatments
+     * from the database using {@link PatientDao}, and then generates a PDF and a Json file
+     * containing the patient and treatment data via {@link PdfTest}.
+     */
     public void handlePrint() {
-
 
         Patient selectedItem = this.tableView.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
