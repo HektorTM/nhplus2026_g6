@@ -3,7 +3,7 @@ package de.hitec.nhplus.controller;
 import de.hitec.nhplus.datastorage.DaoFactory;
 import de.hitec.nhplus.datastorage.PatientDao;
 import de.hitec.nhplus.model.Treatment;
-import de.hitec.nhplus.utils.PdfTest;
+import de.hitec.nhplus.utils.PDFUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -256,7 +256,7 @@ public class AllPatientController {
      * This method handles the event triggered by the print button.
      * It retrieves the selected patient from the TableView, loads all related treatments
      * from the database using {@link PatientDao}, and then generates a PDF and a Json file
-     * containing the patient and treatment data via {@link PdfTest}.
+     * containing the patient and treatment data via {@link PDFUtil}.
      */
     public void handlePrint() {
 
@@ -264,7 +264,7 @@ public class AllPatientController {
         if (selectedItem != null) {
             try {
                 List<Treatment> treatments = DaoFactory.getDaoFactory().createTreatmentDao().readTreatmentsByPid(selectedItem.getPid());
-                PdfTest pdf = new PdfTest();
+                PDFUtil pdf = new PDFUtil();
                 pdf.createPatientPdf(selectedItem, treatments, tableView.getScene().getWindow());
             } catch (SQLException exception) {
                 exception.printStackTrace();

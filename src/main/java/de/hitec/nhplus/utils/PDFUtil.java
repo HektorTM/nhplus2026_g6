@@ -22,7 +22,7 @@ import java.util.List;
  * Generates a structured PDF file with patient information
  * as well as a corresponding JSON file in the same directory.
  */
-public class PdfTest {
+public class PDFUtil {
     /**
      * Creates a PDF document containing patient data and treatments
      * and saves it via a file dialog.

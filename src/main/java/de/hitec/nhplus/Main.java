@@ -4,7 +4,7 @@ import de.hitec.nhplus.controller.LoginController;
 import de.hitec.nhplus.datastorage.ConnectionBuilder;
 
 import de.hitec.nhplus.model.Patient;
-import de.hitec.nhplus.utils.PdfTest;
+import de.hitec.nhplus.utils.PDFUtil;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
