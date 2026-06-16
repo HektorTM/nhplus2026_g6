@@ -60,6 +60,34 @@ src/main/resources/de/hitec/nhplus/
 db/nursingHome.db              ← SQLite-Datenbank
 ```
 
+## Running the Application
+
+### Step 1 — Run SetUpDB
+
+Always run `SetUpDB` first. This creates all tables and inserts the default test data including the login accounts.
+
+In IntelliJ: open `src/main/java/de/hitec/nhplus/utils/SetUpDB.java` and run its `main` method.
+
+> **Warning:** Running `SetUpDB` again later will delete all existing data and recreate everything from scratch.
+
+### Step 2 — Run Main
+
+Once SetUpDB has finished, run the `Main` class to start the application.
+
+In IntelliJ: open `src/main/java/de/hitec/nhplus/Main.java` and click the Run button.
+
+### Default credentials
+
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | `admin` | `admin123` |
+| Verwaltung | `verwaltung` | `verwaltung123` |
+| Mitarbeiter | `mitarbeiter` | `mitarbeiter123` |
+
+> **Note:** These credentials are for development and testing only.
+
+---
+
 ## Datenbank zurücksetzen
 
 Falls eure Datenbank durch Tests inkonsistent geworden ist, könnt ihr sie über die Klasse `SetUpDB` (im Package `utils`) zurücksetzen. **Achtung:** Das löscht alle Tabellen und erstellt sie mit Testdaten neu. Eigene Tabellenänderungen gehen dabei verloren.
